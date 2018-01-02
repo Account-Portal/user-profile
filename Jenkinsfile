@@ -1,10 +1,22 @@
-node{
+//load the shared pipeline library
+//define all environment variables
+//define variables for execution stages
+def execagent="master"
+
+node(execagent){
+  //Steps to be able to call pipeline methods
+  concurrency: 1
   checkout scm
-  concurrency : 2
-  print 'something'
-  print 'something else'
-  def me =sh (script:'git whatchanged -n 1 --pretty=format: --name-only',returnStdout:true).trim().split('/')
-  def pckg= me.length>1?me[1]:'.'
-  currentBuild.displayName = pckg+currentBuild.displayName
-  sh 'git log --pretty=oneline --abbrev-commit --graph --decorate --all'
+  dir('pipelines') 
+  {
+        git url: 'https://github.com/Account-Portal/pipelines.git'
+  }
+  def pipeline = load './pipelines/common.groovy'
+  
+  
+  
+  //Setup the pipeline and execute all the stages
+  pipeline.setUp()
+  pipeline.start()
+  pipeline.tearDown()
 }

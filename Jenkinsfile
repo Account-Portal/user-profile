@@ -1,9 +1,9 @@
 //load the shared pipeline library
 //define all environment variables
 //define variables for execution stages
-def execagent="master"
+def WORKER = 'cloud&&centos'
 
-node(execagent){
+node(WORKER){
   //Steps to be able to call pipeline methods
   concurrency: 1
   checkout scm
